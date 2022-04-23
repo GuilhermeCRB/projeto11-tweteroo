@@ -8,7 +8,7 @@ app.listen(5000);
 app.use(cors()); app.use(json());
 
 let user = { username: "", avatar: "" };
-let tweet = { username: "", tweet: "" };
+let tweet = { username: "", avatar: "", tweet: "" };
 
 const usersArray = [];
 const tweetsArray = [];
@@ -24,7 +24,10 @@ app.post("/sign-up", (req, res) => {
 
 app.post("/tweets", (req, res) => {
     const body = req.body;
-    tweet = { ...tweet, username: body.username, tweet: body.tweet };
+    const tweetUser = usersArray.filter(userFromArray => userFromArray.username === body.username);
+    console.log(usersArray);
+    console.log(tweetUser);
+    tweet = { ...tweet, username: body.username, avatar: tweetUser[0].avatar, tweet: body.tweet };
 
     tweetsArray.unshift(tweet);
     console.log(tweetsArray);
