@@ -16,31 +16,36 @@ const tweetsArray = [];
 app.post("/sign-up", (req, res) => {
     const body = req.body;
     user = { ...user, username: body.username, avatar: body.avatar };
+    verifyBlank(Object.values(user),res);
 
     usersArray.unshift(user);
-    console.log(usersArray);
-    res.send("OK");
+    res.status(201).send("OK");
 });
 
 app.post("/tweets", (req, res) => {
     const body = req.body;
+    verifyBlank(Object.values(body),res);
+
     const tweetUser = usersArray.filter(userFromArray => userFromArray.username === body.username);
-    console.log(usersArray);
-    console.log(tweetUser);
     tweet = { ...tweet, username: body.username, avatar: tweetUser[0].avatar, tweet: body.tweet };
 
     tweetsArray.unshift(tweet);
-    console.log(tweetsArray);
-    res.send("OK");
+    res.status(201).send("OK");
 });
 
 app.get("/tweets", (req, res) => {
     if (tweetsArray.length <= 10) {
-        res.send(tweetsArray);
+        res.status(200).send(tweetsArray);
     } else {
         const tweetsToSend = tweetsArray.filter((tweet, index) => index <= 9);
-        res.send(tweetsToSend);
-        console.log(tweetsToSend);
+        res.status(200).send(tweetsToSend);
     }
 });
 
+function verifyBlank(isBlank,res){
+    isBlank.forEach(element => {
+        if(!isBlank){
+            res.status(400).send("Todos os campos são obrigatórios!");
+        }
+    });
+}
