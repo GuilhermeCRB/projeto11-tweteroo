@@ -25,10 +25,10 @@ app.post("/sign-up", (req, res) => {
 app.post("/tweets", (req, res) => {
     const body = req.body;
     verifyBlank(Object.values(body),res);
-
-    const tweetUser = usersArray.filter(userFromArray => userFromArray.username === body.username);
-    tweet = { ...tweet, username: body.username, avatar: tweetUser[0].avatar, tweet: body.tweet };
-
+    
+    const tweetUser = usersArray.filter(userFromArray => userFromArray.username === req.headers.user);
+    tweet = { ...tweet, username: req.headers.user, avatar: tweetUser[0].avatar, tweet: body.tweet };
+    
     tweetsArray.unshift(tweet);
     res.status(201).send("OK");
 });
@@ -42,9 +42,9 @@ app.get("/tweets", (req, res) => {
     }
 });
 
-function verifyBlank(isBlank,res){
-    isBlank.forEach(element => {
-        if(!isBlank){
+function verifyBlank(array,res){
+    array.forEach(isFilled => {
+        if(isFilled === ""){
             res.status(400).send("Todos os campos são obrigatórios!");
         }
     });
